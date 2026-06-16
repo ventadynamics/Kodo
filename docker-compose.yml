@@ -1,0 +1,15 @@
+services:
+  kodo:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - kodo_data:/data
+    environment:
+      - JWT_SECRET=${JWT_SECRET:-change_this_secret_in_production}
+      - DB_PATH=/data/kodo.db
+      - PORT=3000
+    restart: unless-stopped
+
+volumes:
+  kodo_data:

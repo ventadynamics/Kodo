@@ -1,0 +1,13 @@
+node_modules
+*/node_modules
+server/dist
+client/dist
+server/kodo.db
+*.db
+*.db-shm
+*.db-wal
+.env
+.env.local
+.claude/
+CLAUDE.md
+skills-lock.json

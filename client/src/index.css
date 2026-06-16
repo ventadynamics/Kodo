@@ -1,0 +1,348 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* ════════════════════════════════════════════════════════════
+     Kodo Design System — pure HSL token model
+     Accent: 234 100% 67% ≈ #5A6CFF (engineering cold blue)
+     Unique pattern: left-edge reveal line (hover → active)
+     ════════════════════════════════════════════════════════════ */
+
+  :root {
+    /* Backgrounds */
+    --background:         220 20% 98%;
+    --card:               0   0%  100%;
+    --popover:            0   0%  100%;
+
+    /* Foregrounds */
+    --foreground:         222 30% 10%;
+    --card-foreground:    222 30% 10%;
+    --popover-foreground: 222 30% 10%;
+
+    /* Brand accent — Kodo engineering cold blue */
+    --primary:            234 90% 58%;
+    --primary-foreground: 0   0%  100%;
+
+    /* Secondary / muted */
+    --secondary:          220 15% 93%;
+    --secondary-foreground: 222 20% 28%;
+    --muted:              220 15% 93%;
+    --muted-foreground:   215 10% 50%;
+    --accent:             220 15% 90%;
+    --accent-foreground:  222 20% 28%;
+
+    /* State */
+    --destructive:        0   58% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Structure */
+    --border:             220 18% 88%;
+    --input:              220 18% 88%;
+    --ring:               234 90% 58%;
+
+    /* Radius hierarchy */
+    --radius-xs:  0.25rem;   /* 4px  — badges, chips, tags */
+    --radius:     0.375rem;  /* 6px  — inputs, buttons     */
+    --radius-md:  0.5rem;    /* 8px  — cards               */
+    --radius-lg:  0.625rem;  /* 10px — modals, popovers    */
+
+    /* Semantic */
+    --success:   152 55% 40%;   /* #33A873 */
+    --warning:   38  64% 52%;   /* #D6A64B */
+    --danger:    0   58% 55%;   /* #D96262 */
+
+    /* Finance */
+    --income:        hsl(134 53% 36%);
+    --expense:       hsl(0 58% 55%);
+    --income-light:  hsl(134 53% 36% / 0.10);
+    --expense-light: hsl(0 58% 55% / 0.10);
+  }
+
+  /* ── Dark mode (primary) ──────────────────────────────────────── */
+  .dark {
+    /* Backgrounds: strict 3-stop hierarchy */
+    --background:         225 16%  7%;   /* deepest: #0F1115 */
+    --card:               222 22% 11%;   /* surface:  #171B24 */
+    --popover:            220 26% 14%;   /* raised:   #1D2432 */
+
+    /* Foregrounds: 3-stop text hierarchy */
+    --foreground:         218 25% 95%;   /* primary text:   #EFF1F7 */
+    --card-foreground:    218 25% 95%;
+    --popover-foreground: 218 25% 95%;
+    --muted-foreground:   215 12% 54%;   /* secondary text: #7D8799 */
+
+    /* Brand accent — cold engineering blue (dark bg reads at 67%) */
+    --primary:            234 100% 67%;  /* #5A6CFF */
+    --primary-foreground: 0   0%   100%;
+
+    /* Secondary / muted */
+    --secondary:          218 26% 19%;   /* #242D3E */
+    --secondary-foreground: 218 18% 70%; /* #AAB3C6 */
+    --muted:              220 26% 14%;   /* same as popover */
+    --accent:             218 26% 17%;
+    --accent-foreground:  218 18% 70%;
+
+    /* State */
+    --destructive:        0   52% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Structure */
+    --border:             220 26% 20%;   /* #262F42 */
+    --input:              220 26% 20%;
+    --ring:               234 100% 67%;
+
+    /* Finance dark */
+    --income:        hsl(152 55% 42%);
+    --expense:       hsl(0 52% 60%);
+    --income-light:  hsl(152 55% 42% / 0.12);
+    --expense-light: hsl(0  52% 60% / 0.12);
+  }
+
+  * {
+    border-color: hsl(var(--border));
+    box-sizing: border-box;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Inter optical-size + CV variants */
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -moz-font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    /* Tabular numerics — critical for finance / timer / IDs */
+    font-variant-numeric: tabular-nums;
+    overscroll-behavior: none;
+  }
+
+  /* Scrollbar — infrastructure, not UI element */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.22);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.38);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Kodo Signature UI Pattern: Left-Edge Reveal Line
+   ────────────────────────────────────────────────────────────────
+   Every interactive item (nav, row, card) gets a ::before pseudo
+   that transitions from opacity 0 (hover) → opacity 1 (active).
+   Creates a unified "language of intent" across the whole product.
+   ════════════════════════════════════════════════════════════════ */
+
+/* Base: hover state — line fades in */
+.kodo-item {
+  position: relative;
+  overflow: hidden;
+}
+.kodo-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 55%;
+  background: hsl(var(--primary));
+  border-radius: 0 2px 2px 0;
+  opacity: 0;
+  transition: opacity 120ms ease, height 120ms ease;
+}
+.kodo-item:hover::before {
+  opacity: 0.45;
+  height: 65%;
+}
+
+/* Active state — full solid line */
+.kodo-item.kodo-active::before {
+  opacity: 1;
+  height: 60%;
+}
+.kodo-item.kodo-active {
+  color: hsl(var(--primary)) !important;
+  /* No bg tint — line does all the work */
+}
+
+/* ── TaskBoard dark column backgrounds ──────────────────────────────────── */
+.dark .dark-column { background: var(--col-bg-dark) !important; }
+
+/* Sidebar-specific active (nav-active alias for backward compat) */
+.nav-active {
+  position: relative;
+  overflow: hidden;
+  color: hsl(var(--primary)) !important;
+}
+.nav-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 60%;
+  background: hsl(var(--primary));
+  border-radius: 0 2px 2px 0;
+  opacity: 1;
+}
+
+
+/* ════════════════════════════════════════════════════════════════
+   Knowledge base reference chips
+   ════════════════════════════════════════════════════════════════ */
+.kodo-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1em 0.45em;
+  border-radius: var(--radius-xs);
+  font-size: 0.78em;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  border: 1px solid;
+  cursor: pointer;
+  transition: opacity 120ms ease;
+  vertical-align: middle;
+  margin: 0 1px;
+  white-space: nowrap;
+}
+.kodo-chip:hover { opacity: 0.65; }
+.kodo-chip-done { text-decoration: line-through; opacity: 0.5; }
+.kodo-chip-deleted {
+  color: hsl(var(--muted-foreground)) !important;
+  border-color: hsl(var(--border)) !important;
+  background: hsl(var(--muted) / 0.5) !important;
+  cursor: default;
+  opacity: 0.6;
+}
+.kodo-chip-deleted:hover { opacity: 0.6; }
+
+/* ════════════════════════════════════════════════════════════════
+   Markdown / wiki viewer
+   ════════════════════════════════════════════════════════════════ */
+.md-body {
+  font-size: 0.875rem;
+  line-height: 1.75;
+  color: hsl(var(--foreground));
+}
+.md-body h1 { font-size: 1.2rem;  font-weight: 600; margin: 1.5rem 0 0.5rem; letter-spacing: -0.01em; }
+.md-body h2 { font-size: 1.05rem; font-weight: 600; margin: 1.25rem 0 0.4rem; }
+.md-body h3 { font-size: 0.9rem;  font-weight: 600; margin: 1rem 0 0.35rem; }
+.md-body h1:first-child,
+.md-body h2:first-child,
+.md-body h3:first-child { margin-top: 0; }
+.md-body p  { margin: 0 0 0.75rem; }
+.md-body p:last-child { margin-bottom: 0; }
+.md-body ul { list-style: disc;    padding-left: 1.4rem; margin: 0 0 0.75rem; }
+.md-body ol { list-style: decimal; padding-left: 1.4rem; margin: 0 0 0.75rem; }
+.md-body li { margin: 0.2rem 0; }
+.md-body strong { font-weight: 600; }
+.md-body em     { font-style: italic; }
+.md-body a  { color: hsl(var(--primary)); text-decoration: none; }
+.md-body a:hover { text-decoration: underline; }
+.md-body code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.8em;
+  background: hsl(var(--muted));
+  padding: 0.15em 0.35em;
+  border-radius: var(--radius-xs);
+  color: hsl(var(--primary));
+}
+.md-body pre {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  margin: 0 0 0.75rem;
+}
+.md-body pre code { background: none; padding: 0; font-size: 0.8rem; color: hsl(var(--foreground)); }
+.md-body blockquote {
+  border-left: 2px solid hsl(var(--primary) / 0.4);
+  padding-left: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 0.75rem;
+}
+.md-body hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 1.25rem 0;
+}
+.md-body table { width: 100%; border-collapse: collapse; margin: 0 0 0.75rem; font-size: 0.85rem; }
+.md-body th {
+  font-weight: 500;
+  background: hsl(var(--muted));
+  text-align: left;
+  color: hsl(var(--muted-foreground));
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+}
+.md-body th, .md-body td { border: 1px solid hsl(var(--border)); padding: 0.4rem 0.65rem; }
+
+
+/* ════════════════════════════════════════════════════════════════
+   TipTap WYSIWYG editor
+   ════════════════════════════════════════════════════════════════ */
+.wysiwyg-editor .ProseMirror {
+  outline: none;
+  color: hsl(var(--foreground));
+  caret-color: hsl(var(--primary));
+  min-height: 100%;
+  padding: 1rem;
+}
+.wysiwyg-editor .ProseMirror h1 { font-size: 1.2rem;  font-weight: 600; margin: 1.5rem 0 0.5rem; letter-spacing: -0.01em; }
+.wysiwyg-editor .ProseMirror h2 { font-size: 1.05rem; font-weight: 600; margin: 1.25rem 0 0.4rem; }
+.wysiwyg-editor .ProseMirror h3 { font-size: 0.9rem;  font-weight: 600; margin: 1rem 0 0.35rem; }
+.wysiwyg-editor .ProseMirror h1:first-child,
+.wysiwyg-editor .ProseMirror h2:first-child,
+.wysiwyg-editor .ProseMirror h3:first-child { margin-top: 0; }
+.wysiwyg-editor .ProseMirror p  { margin: 0 0 0.6rem; }
+.wysiwyg-editor .ProseMirror p:last-child { margin-bottom: 0; }
+.wysiwyg-editor .ProseMirror ul { list-style: disc;    padding-left: 1.4rem; margin: 0 0 0.6rem; }
+.wysiwyg-editor .ProseMirror ol { list-style: decimal; padding-left: 1.4rem; margin: 0 0 0.6rem; }
+.wysiwyg-editor .ProseMirror li { margin: 0.2rem 0; }
+.wysiwyg-editor .ProseMirror strong { font-weight: 600; }
+.wysiwyg-editor .ProseMirror em     { font-style: italic; }
+.wysiwyg-editor .ProseMirror u      { text-decoration: underline; }
+.wysiwyg-editor .ProseMirror code {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 0.8em;
+  background: hsl(var(--muted));
+  padding: 0.15em 0.35em;
+  border-radius: var(--radius-xs);
+  color: hsl(var(--primary));
+}
+.wysiwyg-editor .ProseMirror pre {
+  background: hsl(var(--muted));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  margin: 0 0 0.6rem;
+}
+.wysiwyg-editor .ProseMirror pre code { background: none; padding: 0; font-size: 0.8rem; }
+.wysiwyg-editor .ProseMirror blockquote {
+  border-left: 2px solid hsl(var(--primary) / 0.4);
+  padding-left: 0.85rem;
+  color: hsl(var(--muted-foreground));
+  margin: 0 0 0.6rem;
+}
+.wysiwyg-editor .ProseMirror hr {
+  border: none;
+  border-top: 1px solid hsl(var(--border));
+  margin: 1rem 0;
+}
+.wysiwyg-editor .ProseMirror a { color: hsl(var(--primary)); text-decoration: none; }
+.wysiwyg-editor .ProseMirror a:hover { text-decoration: underline; }
